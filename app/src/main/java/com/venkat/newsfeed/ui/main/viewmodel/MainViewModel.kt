@@ -9,8 +9,7 @@ import java.lang.Exception
 
 class MainViewModel(private val repository: MainRepository): ViewModel() {
 
-
-    fun getFacts() = liveData(Dispatchers.IO){
+    val facts  = liveData(Dispatchers.IO){
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = repository.getFacts()))

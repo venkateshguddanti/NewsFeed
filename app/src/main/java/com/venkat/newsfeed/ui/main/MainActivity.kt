@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpObservers() {
 
-        viewModel.getFacts().observe(this, Observer {
+        viewModel.facts.observe(this, Observer {
             it?.let {resources->
                 when(resources.status)
                 {
@@ -62,11 +62,14 @@ class MainActivity : AppCompatActivity() {
             addRows(facts.filter { fact:Rows->fact.title != null })
             notifyDataSetChanged()
         }
-
+        refresh.isRefreshing=false
     }
 
     private fun setupUi() {
-
+        refresh.setOnRefreshListener {
+            progressBar.visibility = View.GONE
+           setUpObservers()
+        }
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = FactsAdapter(arrayListOf())
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context,
