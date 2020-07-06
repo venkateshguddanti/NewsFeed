@@ -65,6 +65,7 @@ class FactsFragment : Fragment() {
                     Status.ERROR->{
                         recyclerView.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
+                        refresh.isRefreshing =false
                         Toast.makeText(activity, it.message, Toast.LENGTH_LONG).show()
                     }
                     Status.LOADING->{
