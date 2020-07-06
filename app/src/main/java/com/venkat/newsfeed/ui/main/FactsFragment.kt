@@ -1,5 +1,6 @@
 package com.venkat.newsfeed.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import com.venkat.newsfeed.R
 import com.venkat.newsfeed.data.api.ApiHelper
 import com.venkat.newsfeed.data.api.RetrofitBuilder
 import com.venkat.newsfeed.data.model.Rows
+import com.venkat.newsfeed.db.DatabaseBuilder
+import com.venkat.newsfeed.db.DbHelper
 import com.venkat.newsfeed.ui.main.adapter.FactsAdapter
 import com.venkat.newsfeed.ui.main.viewmodel.MainViewModel
 import com.venkat.newsfeed.ui.main.viewmodel.ViewModelFactory
@@ -97,8 +100,11 @@ class FactsFragment : Fragment() {
 
     private fun setUpViewModel() {
 
+
         viewModel = ViewModelProvider(this,
-            ViewModelFactory(ApiHelper(RetrofitBuilder.apiService))
+            ViewModelFactory(ApiHelper(RetrofitBuilder.apiService),
+            DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
+            )
         ).get(MainViewModel::class.java)
     }
 
