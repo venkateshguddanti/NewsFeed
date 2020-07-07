@@ -39,7 +39,6 @@ class MainViewModelTest {
     @Before
     fun setUp() {
        Dispatchers.setMain(testDispatcher)
-        MockitoAnnotations.initMocks(this)
     }
     @Test
     fun givenServerResponse_200_facts_should_return_success() {

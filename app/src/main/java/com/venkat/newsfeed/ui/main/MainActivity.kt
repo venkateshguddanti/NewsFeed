@@ -10,8 +10,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val fragment = supportFragmentManager.findFragmentByTag(FactsFragment::class.simpleName)
-        if(fragment == null) supportFragmentManager.beginTransaction().replace(R.id.container,FactsFragment(),FactsFragment::class.simpleName).commit()
+        val fragment = supportFragmentManager.findFragmentByTag(FactsFragment::class.java.simpleName)
+        if(fragment == null) supportFragmentManager.beginTransaction().replace(R.id.container,FactsFragment(),FactsFragment::class.java.simpleName).commit()
     }
 
 }
