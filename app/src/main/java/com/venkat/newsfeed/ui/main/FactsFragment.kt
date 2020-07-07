@@ -60,6 +60,7 @@ class FactsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         updateFromDb()
+        setUpNetworkListener()
     }
 
     private fun setUpNetworkListener() {
@@ -70,16 +71,16 @@ class FactsFragment : Fragment() {
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     //take action when network connection is gained
-                    networkCheck = true
                     activity?.runOnUiThread {
                         Handler().postDelayed({
-                            setUpObservers()
+                            if(networkCheck) setUpObservers()
+                            networkCheck = true
                         },1000)
                        }
+
                 }
                 override fun onLost(network: Network?) {
                     //take action when network connection is lost
-                    networkCheck = false
                 }
             })
         }
@@ -124,7 +125,6 @@ class FactsFragment : Fragment() {
                         factRowsList.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
                         refresh.isRefreshing =false
-                        if(!networkCheck) setUpNetworkListener() else Unit
 
                     }
                     Status.LOADING->{
