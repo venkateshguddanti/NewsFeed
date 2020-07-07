@@ -48,12 +48,12 @@ class MainViewModelTest {
                 .`when`(mainRepository)
                 .getFacts()
             val viewModel = MainViewModel(mainRepository)
-            viewModel.facts.observeForever(apiObserver)
+            viewModel.getFacts().observeForever(apiObserver)
              verify(mainRepository).getFacts()
             verify(apiObserver).onChanged(
                 Resource.success(facts)
             )
-            viewModel.facts.removeObserver(apiObserver)
+            viewModel.getFacts().removeObserver(apiObserver)
         }
     }
     @Test
@@ -64,12 +64,12 @@ class MainViewModelTest {
                 .`when`(mainRepository)
                 .getFacts()
             val viewModel = MainViewModel(mainRepository)
-            viewModel.facts.observeForever(apiObserver)
+            viewModel.getFacts().observeForever(apiObserver)
             verify(mainRepository).getFacts()
             verify(apiObserver).onChanged(
                 Resource.error(null,errorMsg)
             )
-            viewModel.facts.removeObserver(apiObserver)
+            viewModel.getFacts().removeObserver(apiObserver)
         }
     }
 
