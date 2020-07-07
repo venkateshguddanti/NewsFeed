@@ -3,7 +3,6 @@ package com.venkat.newsfeed.ui.main
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -13,8 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,8 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.venkat.newsfeed.R
 import com.venkat.newsfeed.data.api.ApiHelper
 import com.venkat.newsfeed.data.api.RetrofitBuilder
-import com.venkat.newsfeed.data.model.Facts
-import com.venkat.newsfeed.data.model.Resource
 import com.venkat.newsfeed.data.model.Rows
 import com.venkat.newsfeed.db.DatabaseBuilder
 import com.venkat.newsfeed.db.DbHelper
@@ -76,7 +71,6 @@ class FactsFragment : Fragment() {
                 override fun onAvailable(network: Network) {
                     //take action when network connection is gained
                     networkCheck = true
-                    it.unregisterNetworkCallback(this)
                     activity?.runOnUiThread {
                         Handler().postDelayed({
                             setUpObservers()

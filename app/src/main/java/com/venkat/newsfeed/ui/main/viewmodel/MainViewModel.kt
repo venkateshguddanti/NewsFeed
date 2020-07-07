@@ -1,8 +1,6 @@
 package com.venkat.newsfeed.ui.main.viewmodel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.venkat.newsfeed.data.model.Facts
 import com.venkat.newsfeed.data.model.Resource
 import com.venkat.newsfeed.data.model.Rows
 import com.venkat.newsfeed.data.repository.MainRepository
