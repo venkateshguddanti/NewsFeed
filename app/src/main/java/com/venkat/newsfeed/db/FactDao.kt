@@ -3,19 +3,20 @@ package com.venkat.newsfeed.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.venkat.newsfeed.data.model.Rows
 
 @Dao
 interface FactDao{
-    @Query("SELECT * FROM news_facts WHERE _category LIKE :category")
-    fun getFacts(category : String?): List<NewsFact>
+    @Query("SELECT * FROM fact_rows WHERE category LIKE :category")
+    fun getFacts(category : String?): List<Rows>
 
     @Insert
-    fun insertAll(facts: List<NewsFact>)
+    fun insertAll(facts: List<Rows>)
 
-    @Query("SELECT * FROM news_facts")
-    fun getAll(): List<NewsFact>
+    @Query("SELECT * FROM fact_rows")
+    fun getAll(): List<Rows>
 
-    @Query("DELETE FROM news_facts")
+    @Query("DELETE FROM fact_rows")
     fun deleteFacts()
 
 }

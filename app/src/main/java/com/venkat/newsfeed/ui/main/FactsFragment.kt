@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.venkat.newsfeed.R
 import com.venkat.newsfeed.data.api.ApiHelper
 import com.venkat.newsfeed.data.api.RetrofitBuilder
+import com.venkat.newsfeed.data.model.Facts
 import com.venkat.newsfeed.data.model.Rows
 import com.venkat.newsfeed.db.DatabaseBuilder
 import com.venkat.newsfeed.db.DbHelper
@@ -29,6 +29,8 @@ import com.venkat.newsfeed.utils.Status
 import kotlinx.android.synthetic.main.fragment_facts.factRowsList
 import kotlinx.android.synthetic.main.fragment_facts.refresh
 import kotlinx.android.synthetic.main.fragment_facts.progressBar
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class FactsFragment : Fragment() {
@@ -48,66 +50,58 @@ class FactsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
+        updateFromDb()
         setUpViewModel()
-        if(savedInstanceState == null)
-        {
-            setUpObservers()
+        setUpObservers()
+    }
+
+    private fun updateFromDb() {
+        val dbHelper = DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
+        var rows : List<Rows> = emptyList()
+        GlobalScope.launch {
+            rows = dbHelper.getAllFacts()
+            if(rows.isNotEmpty())
+            {
+                val facts = Facts(rows[0].category,dbHelper.getAllFacts() as ArrayList<Rows>)
+                activity?.runOnUiThread {  (activity as MainActivity).supportActionBar?.title = facts.title}
+                retrieveList(facts.rows)
+            }
         }
     }
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(FactsFragment::class.java.simpleName,FactsFragment::class.java.simpleName)
-    }
+
     override fun onStart() {
         super.onStart()
-        updateFromDb()
         setUpNetworkListener()
     }
 
     private fun setUpNetworkListener() {
 
         val connectivityManager = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        connectivityManager?.let {
+        connectivityManager.let {
             it.registerDefaultNetworkCallback(@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     //take action when network connection is gained
                     activity?.runOnUiThread {
-                        Handler().postDelayed({
-                            if(networkCheck) setUpObservers()
-                            networkCheck = true
-                        },1000)
+                            if(networkCheck)  viewModel.getFacts()
                        }
 
                 }
-                override fun onLost(network: Network?) {
+                override fun onLost(network: Network) {
                     //take action when network connection is lost
+                    networkCheck = true
                 }
             })
         }
     }
-    private fun updateFromDb() {
-        viewModel.factsFromDb.observe(viewLifecycleOwner, Observer {
-            it?.let {resource ->
-                when(resource.status)
-                {
-                    Status.SUCCESS->{
-                        factRowsList.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
-                        retrieveList(resource.data!!.rows)
-                    }
-                }
 
-            }
-        })
-    }
     private fun setUpObservers() {
 
-        viewModel.getFacts().observe(viewLifecycleOwner, Observer {
+        viewModel.facts.observe(viewLifecycleOwner, Observer {
             it?.let {resources->
                 when(resources.status)
                 {
                     Status.SUCCESS->{
-                        factRowsList.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
 
                         resources.data?.let {
@@ -122,14 +116,13 @@ class FactsFragment : Fragment() {
                         }
                     }
                     Status.ERROR->{
-                        factRowsList.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
                         refresh.isRefreshing =false
-
+                        Toast.makeText(activity, getString(R.string.no_network_found), Toast.LENGTH_LONG).show()
+                        networkCheck = true
                     }
                     Status.LOADING->{
-                        if(!refresh.isRefreshing)progressBar.visibility = View.VISIBLE
-                        factRowsList.visibility = View.GONE
+                        if(!refresh.isRefreshing) progressBar.visibility = View.VISIBLE else Unit
                     }
                 }
             }
@@ -147,7 +140,7 @@ class FactsFragment : Fragment() {
     private fun setupUi() {
         refresh.setOnRefreshListener {
             progressBar.visibility = View.GONE
-            setUpObservers()
+            viewModel.getFacts()
         }
         factRowsList.layoutManager = LinearLayoutManager(activity)
         adapter = FactsAdapter(arrayListOf())

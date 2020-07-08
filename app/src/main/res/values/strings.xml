@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NewsFeed</string>
     <string name="no_data_found">No data available!!</string>
+    <string name="no_network_found">No Network Found!!</string>
     <!-- Strings related to login -->
 
 </resources>

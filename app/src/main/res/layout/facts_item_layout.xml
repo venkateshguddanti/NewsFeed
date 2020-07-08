@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:elevation="@dimen/margin_or_padding_8dp"
-    android:layout_margin="2dp"
     android:layout_height="wrap_content">
 
     <ImageView
+        android:contentDescription="@string/app_name"
         android:id="@+id/imageViewAvatar"
         android:layout_width="@dimen/facts_list_item_thumbnail_width"
         android:layout_height="0dp"
-        android:paddingRight="@dimen/margin_or_padding_4dp"
+        android:paddingEnd="@dimen/margin_or_padding_4dp"
+        android:paddingStart="@dimen/margin_or_padding_4dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/factTitle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,26 +21,23 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/factTitle"
-        style="@style/TextAppearance.AppCompat.Large"
+        android:theme="@style/TextHeaderStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_or_padding_8dp"
-        android:layout_marginTop="@dimen/margin_or_padding_4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/colorAccent"
         tools:text="title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/factDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_or_padding_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageViewAvatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/factTitle"
+        android:theme="@style/TextContentStyle"
         tools:text="description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

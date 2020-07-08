@@ -1,11 +1,10 @@
 package com.venkat.newsfeed.ui.main.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
+import com.venkat.newsfeed.data.api.ApiHelper
 import com.venkat.newsfeed.data.model.Facts
-import com.venkat.newsfeed.data.model.Resource
-import com.venkat.newsfeed.data.repository.MainRepository
-import com.venkat.newsfeed.db.NewsFact
+import com.venkat.newsfeed.data.model.Rows
+import com.venkat.newsfeed.db.DbHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.*
 import org.junit.runner.RunWith
@@ -22,9 +21,10 @@ class MainViewModelTest {
     @get:Rule
     private val testDispatcher = TestCoroutineRule()
     @Mock
-    private lateinit var mainRepository: MainRepository
+    private lateinit var apiHelper: ApiHelper
     @Mock
-    private lateinit var apiObserver: Observer<Resource<Facts>>
+    private lateinit var dbHelper: DbHelper
+
 
     @Before
     fun setUp() {
@@ -34,18 +34,18 @@ class MainViewModelTest {
     fun givenServerResponse_success_facts_should_return_data() {
         val facts = mock(Facts::class.java)
         testDispatcher.runBlockingTest {
-            `when`(mainRepository.getFacts()).thenReturn(facts)
-            Assert.assertEquals(mainRepository.getFacts(),facts)
-            verify(mainRepository).getFacts()
+            `when`(apiHelper.getFacts()).thenReturn(facts)
+            Assert.assertEquals(apiHelper.getFacts(),facts)
+            verify(apiHelper).getFacts()
         }
     }
     @Test
     fun givenDbRequest_execute_should_return_data() {
-        val newsFacts = emptyList<NewsFact>()
+        val newsFacts = emptyList<Rows>()
         testDispatcher.runBlockingTest {
-            `when`(mainRepository.getAllFacts()).thenReturn(newsFacts)
-             Assert.assertEquals(mainRepository.getAllFacts(),newsFacts)
-             verify(mainRepository).getAllFacts()
+            `when`(dbHelper.getAllFacts()).thenReturn(newsFacts)
+             Assert.assertEquals(dbHelper.getAllFacts(),newsFacts)
+             verify(dbHelper).getAllFacts()
         }
     }
 

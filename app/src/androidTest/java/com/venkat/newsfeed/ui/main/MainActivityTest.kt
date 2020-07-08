@@ -21,9 +21,9 @@ class MainActivityTest {
     @get:Rule
     var activityTestRule: ActivityTestRule<MainActivity>
             = ActivityTestRule(MainActivity::class.java)
-    lateinit var mainActivity : MainActivity
-    val factsFragment = FactsFragment()
-    lateinit var  container : FrameLayout
+    private lateinit var mainActivity : MainActivity
+    private val factsFragment = FactsFragment()
+    private lateinit var  container : FrameLayout
 
     @Before
     fun setUp() {

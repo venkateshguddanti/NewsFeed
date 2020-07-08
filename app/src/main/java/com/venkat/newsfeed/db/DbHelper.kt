@@ -1,9 +1,11 @@
 package com.venkat.newsfeed.db
 
+import com.venkat.newsfeed.data.model.Rows
+
 class DbHelper(private val factDao: FactDao)
 {
-    suspend fun getAllFacts() = factDao.getAll()
-    suspend fun insertFacts(facts : List<NewsFact>) = factDao.insertAll(facts)
-    suspend fun deleteAll() = factDao.deleteFacts()
+     fun getAllFacts() = factDao.getAll()
+     fun insertFacts(facts : List<Rows>) = factDao.insertAll(facts)
+     fun deleteAll() = factDao.deleteFacts()
 
 }

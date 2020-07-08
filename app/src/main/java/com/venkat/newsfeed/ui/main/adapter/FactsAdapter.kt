@@ -10,7 +10,7 @@ import com.venkat.newsfeed.data.model.Rows
 import kotlinx.android.synthetic.main.facts_item_layout.view.*
 
 class FactsAdapter(private val rows : ArrayList<Rows>): RecyclerView.Adapter<FactsAdapter.DataViewHolder>() {
-    class DataViewHolder(val itemVew : View) :RecyclerView.ViewHolder(itemVew) {
+    class DataViewHolder(private val itemVew : View) :RecyclerView.ViewHolder(itemVew) {
 
         fun bind(row : Rows)
         {

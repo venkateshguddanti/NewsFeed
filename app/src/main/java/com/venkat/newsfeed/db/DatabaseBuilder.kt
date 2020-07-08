@@ -19,7 +19,7 @@ object DatabaseBuilder {
         Room.databaseBuilder(
             context,
             AppDb::class.java,
-            "news_fact.db"
+            "fact_rows.db"
         ).build()
 
 }
