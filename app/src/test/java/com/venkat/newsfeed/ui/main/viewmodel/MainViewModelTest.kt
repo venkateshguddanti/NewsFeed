@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MainViewModelTest {
@@ -24,31 +25,32 @@ class MainViewModelTest {
     private lateinit var apiHelper: ApiHelper
     @Mock
     private lateinit var dbHelper: DbHelper
+
     @Before
     fun setUp() {
     }
+
     @Test
     fun givenServerResponse_success_facts_should_return_data() {
         val facts = mock(Facts::class.java)
         testDispatcher.runBlockingTest {
             `when`(apiHelper.getFacts()).thenReturn(facts)
-            Assert.assertEquals(apiHelper.getFacts(),facts)
+            Assert.assertEquals(apiHelper.getFacts(), facts)
             verify(apiHelper).getFacts()
         }
     }
+
     @Test
     fun givenDbRequest_execute_should_return_data() {
         val newsFacts = emptyList<Rows>()
         testDispatcher.runBlockingTest {
             `when`(dbHelper.getAllFacts()).thenReturn(newsFacts)
-             Assert.assertEquals(dbHelper.getAllFacts(),newsFacts)
-             verify(dbHelper).getAllFacts()
+            Assert.assertEquals(dbHelper.getAllFacts(), newsFacts)
+            verify(dbHelper).getAllFacts()
         }
     }
 
     @After
     fun tearDown() {
-
     }
-
 }
