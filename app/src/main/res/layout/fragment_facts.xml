@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity"
-    android:id="@+id/refresh">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:id="@+id/refresh"
+    style="@style/ViewFillHeightAndWidth"
+    tools:context=".ui.main.MainActivity">
+    <FrameLayout style="@style/ViewFillHeightAndWidth">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/factRowsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            style="@style/ViewFillHeightAndWidth" />
         <ProgressBar
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"/>
-    </RelativeLayout>
+            android:id="@+id/progressBar"
+            style="@style/ViewWrapHeightAndWidth"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

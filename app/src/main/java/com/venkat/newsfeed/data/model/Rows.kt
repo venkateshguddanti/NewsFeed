@@ -7,13 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "fact_rows")
 data class Rows(
     @ColumnInfo(name = "category") val category: String?,
-
-    @ColumnInfo(name = "title")val title:String?,
-
-    @ColumnInfo(name = "description")val description :String?,
-
-    @ColumnInfo(name = "imageHref")val imageHref:String?)
-{
+    @ColumnInfo(name = "title") val title: String?,
+    @ColumnInfo(name = "description") val description: String?,
+    @ColumnInfo(name = "imageHref") val imageHref: String?) {
     @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
+    var id: Int = 0
 }

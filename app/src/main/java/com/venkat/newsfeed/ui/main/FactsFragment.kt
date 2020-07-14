@@ -35,9 +35,9 @@ import kotlinx.coroutines.launch
 
 class FactsFragment : Fragment() {
 
-    private lateinit var viewModel : MainViewModel
+    private lateinit var viewModel: MainViewModel
     private lateinit var adapter: FactsAdapter
-    private var networkCheck : Boolean = false
+    private var networkCheck: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,14 +56,15 @@ class FactsFragment : Fragment() {
     }
 
     private fun updateFromDb() {
-        val dbHelper = DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
-        var rows : List<Rows> = emptyList()
+        val dbHelper =
+            DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
         GlobalScope.launch {
-            rows = dbHelper.getAllFacts()
-            if(rows.isNotEmpty())
-            {
-                val facts = Facts(rows[0].category,dbHelper.getAllFacts() as ArrayList<Rows>)
-                activity?.runOnUiThread {  (activity as MainActivity).supportActionBar?.title = facts.title}
+            val rows = dbHelper.getAllFacts()
+            if (rows.isNotEmpty()) {
+                val facts = Facts(rows[0].category, dbHelper.getAllFacts() as ArrayList<Rows>)
+                activity?.runOnUiThread {
+                    (activity as MainActivity).supportActionBar?.title = facts.title
+                }
                 retrieveList(facts.rows)
             }
         }
@@ -75,18 +76,18 @@ class FactsFragment : Fragment() {
     }
 
     private fun setUpNetworkListener() {
-
-        val connectivityManager = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.let {
             it.registerDefaultNetworkCallback(@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     //take action when network connection is gained
                     activity?.runOnUiThread {
-                            if(networkCheck)  viewModel.getFacts()
-                       }
-
+                        if (networkCheck) viewModel.getFacts()
+                    }
                 }
+
                 override fun onLost(network: Network) {
                     //take action when network connection is lost
                     networkCheck = true
@@ -96,45 +97,45 @@ class FactsFragment : Fragment() {
     }
 
     private fun setUpObservers() {
-
         viewModel.facts.observe(viewLifecycleOwner, Observer {
-            it?.let {resources->
-                when(resources.status)
-                {
-                    Status.SUCCESS->{
+            it?.let { resources ->
+                when (resources.status) {
+                    Status.SUCCESS -> {
                         progressBar.visibility = View.GONE
-
-                        resources.data?.let {
-                                facts->
-                            if(resources.data.rows.size == 0)
-                            {
-                                Toast.makeText(activity, R.string.no_data_found, Toast.LENGTH_LONG).show()
-                            }else {
+                        resources.data?.let { facts ->
+                            if (resources.data.rows.size == 0) {
+                                Toast.makeText(activity, R.string.no_data_found, Toast.LENGTH_LONG)
+                                    .show()
+                            } else {
                                 retrieveList(facts.rows)
                                 (activity as MainActivity).supportActionBar?.title = facts.title
                             }
                         }
                     }
-                    Status.ERROR->{
+                    Status.ERROR -> {
                         progressBar.visibility = View.GONE
-                        refresh.isRefreshing =false
-                        Toast.makeText(activity, getString(R.string.no_network_found), Toast.LENGTH_LONG).show()
+                        refresh.isRefreshing = false
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.no_network_found),
+                            Toast.LENGTH_LONG
+                        ).show()
                         networkCheck = true
                     }
-                    Status.LOADING->{
-                        if(!refresh.isRefreshing) progressBar.visibility = View.VISIBLE else Unit
+                    Status.LOADING -> {
+                        if (!refresh.isRefreshing) progressBar.visibility = View.VISIBLE else Unit
                     }
                 }
             }
         })
     }
 
-    private fun retrieveList(facts: List<Rows>){
+    private fun retrieveList(facts: List<Rows>) {
         adapter.apply {
-            addRows(facts.filter { fact: Rows ->fact.title != null })
+            addRows(facts.filter { fact: Rows -> fact.title != null })
             notifyDataSetChanged()
         }
-        refresh.isRefreshing=false
+        refresh.isRefreshing = false
     }
 
     private fun setupUi() {
@@ -145,19 +146,20 @@ class FactsFragment : Fragment() {
         factRowsList.layoutManager = LinearLayoutManager(activity)
         adapter = FactsAdapter(arrayListOf())
         factRowsList.addItemDecoration(
-            DividerItemDecoration(factRowsList.context,
-            (factRowsList.layoutManager as LinearLayoutManager).orientation)
+            DividerItemDecoration(
+                factRowsList.context,
+                (factRowsList.layoutManager as LinearLayoutManager).orientation
+            )
         )
         factRowsList.adapter = adapter
     }
 
     private fun setUpViewModel() {
-
-
-        viewModel = ViewModelProvider(this,
+        viewModel = ViewModelProvider(
+            this,
             ViewModelFactory(
                 ApiHelper(RetrofitBuilder.apiService),
-            DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
+                DbHelper(DatabaseBuilder.getInstance(activity!!.applicationContext).factDao())
             )
         ).get(MainViewModel::class.java)
     }

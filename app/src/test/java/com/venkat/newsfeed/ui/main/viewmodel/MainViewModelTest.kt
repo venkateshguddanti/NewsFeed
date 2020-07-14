@@ -24,11 +24,8 @@ class MainViewModelTest {
     private lateinit var apiHelper: ApiHelper
     @Mock
     private lateinit var dbHelper: DbHelper
-
-
     @Before
     fun setUp() {
-
     }
     @Test
     fun givenServerResponse_success_facts_should_return_data() {
